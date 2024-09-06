@@ -137,39 +137,50 @@
         </div>
     </div>
 
-    <script>
-        const passwordEl = document.querySelector(".password");
-        const copyEl = document.querySelector(".copy");
-        const button = document.querySelector(".button-box");
-        const span = document.querySelector(".copied");
+   <script>
+    const passwordEl = document.querySelector(".password");
+    const copyEl = document.querySelector(".copy");
+    const button = document.querySelector(".button-box");
+    const span = document.querySelector(".copied");
 
-        function generatePassword(){
-            span.classList.remove("visible");
-            const characters = "QAZ*WS()XEDCRF![]?VTG*()BY!?HNUJMI!?*KOLPq!?a[]zwsxedc!?rfvt*!?gbyh*!{}?nujm?*!ik{)}o!?lp*12!?34567890!!?"
-            const length = 15;
-            let password = "";
-            for(i = 0; i < length; i++){
-                randomChar = characters.charAt(Math.floor(Math.random() * characters.length));
-                password += randomChar;
+    function generatePassword(){
+        span.classList.remove("visible");
+        const characters = "QAZ*WS()XEDCRF![]?VTG*()BY!?HNUJMI!?*KOLPq!?a[]zwsxedc!?rfvt*!?gbyh*!{}?nujm?*!ik{)}o!?lp*12!?34567890!!?"
+        const length = 15;
+        let password = "";
+        for(let i = 0; i < length; i++){
+            let randomChar = characters.charAt(Math.floor(Math.random() * characters.length));
+            password += randomChar;
+        }
+        passwordEl.innerText = password;
+    };
+
+    function copyPassword() {
+        if(passwordEl.innerText !== ""){
+            // Fallback method for copying text
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = passwordEl.innerText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            
+            try {
+                document.execCommand('copy');
+                span.classList.add("visible");
+            } catch (err) {
+                console.log('Unable to copy to clipboard', err);
             }
-            passwordEl.innerText = password;
-        };
+            
+            document.body.removeChild(tempTextArea);
+        } else {
+            alert("Nothing to Copy..");
+        }
+    }
 
-        copyEl.addEventListener("click", ()=>{
-            if(passwordEl.innerText !== ""){
-                navigator.clipboard.writeText(passwordEl.innerText)
-                .then(()=>{
-                    span.classList.add("visible");
-                })
-                .catch(error =>{
-                    console.log(error);
-                })
-            }else{
-                alert("Nothing to Copy..")
-            }
-        })
+    copyEl.addEventListener("click", copyPassword);
+    button.addEventListener("click", generatePassword);
 
-        button.addEventListener("click", generatePassword);
-    </script>
+    // Generate a password when the page loads
+    generatePassword();
+</script>
 </body>
 </html>
